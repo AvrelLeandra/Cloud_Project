@@ -1,0 +1,22 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "event",
+      "direction": "in",
+      "eventHubName": "smartfleet-events",
+      "connection": "IOT_HUB_EVENTHUB_CONNECTION_STRING",
+      "cardinality": "many",
+      "consumerGroup": "$Default"
+    },
+    {
+      "type": "cosmosDB",
+      "name": "cosmosOutput",
+      "databaseName": "FleetDatabase",
+      "containerName": "telemetry",
+      "connection": "COSMOS_DB_CONNECTION_STRING",
+      "direction": "out"
+    }
+  ]
+}

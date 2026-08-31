@@ -1,0 +1,6 @@
+{
+  "num_vehicles": 15,
+  "telemetry_interval_seconds": 3,
+  "iot_hub_connection_string": "HostName=smartfleet-hub-dev.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=mock_key",
+  "local_ingest_url": "http://127.0.0.1:8000/api/telemetry/ingest"
+}

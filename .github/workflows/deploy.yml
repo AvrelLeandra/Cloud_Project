@@ -1,0 +1,60 @@
+name: Smart Fleet Azure CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-bicep:
+    name: Validate Bicep Infrastructure Templates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Azure CLI & Bicep
+        run: |
+          az bicep install
+          az bicep build --file infra/main.bicep
+
+  test-python:
+    name: Test Simulator & ML Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ml/requirements.txt
+          pip install -r simulator/requirements.txt
+
+      - name: Run ML Training & Evaluation
+        run: |
+          python ml/train.py
+
+  build-frontend:
+    name: Build React Dashboard Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install & Build
+        run: |
+          cd frontend
+          npm install
+          npm run build
