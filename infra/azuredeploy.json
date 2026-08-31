@@ -1,0 +1,70 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "southindia",
+      "metadata": {
+        "description": "Location for all resources"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "metadata": {
+        "description": "Environment name"
+      }
+    },
+    "resourcePrefix": {
+      "type": "string",
+      "defaultValue": "smartfleet",
+      "metadata": {
+        "description": "Prefix for resource names"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-01-01",
+      "name": "[concat(parameters('resourcePrefix'), 'st', parameters('environment'))]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "supportsHttpsTrafficOnly": true
+      }
+    },
+    {
+      "type": "Microsoft.Devices/IotHubs",
+      "apiVersion": "2023-06-30",
+      "name": "[concat(parameters('resourcePrefix'), '-hub-', parameters('environment'))]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "F1",
+        "capacity": 1
+      },
+      "properties": {}
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts",
+      "apiVersion": "2023-11-15",
+      "name": "[concat(parameters('resourcePrefix'), '-cosmos-', parameters('environment'))]",
+      "location": "[parameters('location')]",
+      "kind": "GlobalDocumentDB",
+      "properties": {
+        "databaseAccountOfferType": "Standard",
+        "locations": [
+          {
+            "locationName": "[parameters('location')]",
+            "failoverPriority": 0,
+            "isZoneRedundant": false
+          }
+        ]
+      }
+    }
+  ]
+}
