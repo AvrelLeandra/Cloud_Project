@@ -129,8 +129,8 @@ seed_cache_if_empty()
 class NLQueryRequest(BaseModel):
     prompt: str
 
-@app.get("/")
-def read_root():
+@app.get("/api/health")
+def read_health():
     return {
         "service": "Smart Fleet Management API Layer",
         "status": "ONLINE",
