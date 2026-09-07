@@ -7,7 +7,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://smart-fleet-apiapi.onrender.com',
+        target: 'https://smart-fleet-api.onrender.com',
         changeOrigin: true
       }
     }
