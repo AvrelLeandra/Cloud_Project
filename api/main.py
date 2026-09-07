@@ -8,6 +8,8 @@ import urllib.request
 from typing import List, Dict, Any, Optional
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "ml")))
@@ -447,3 +449,20 @@ def natural_language_query(req: NLQueryRequest):
         "queried_records_count": len(vehicles),
         "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
     }
+
+# Serve React Frontend Build when available (Render & Production)
+frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "dist"))
+if os.path.exists(frontend_dist):
+    assets_dir = os.path.join(frontend_dist, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/{full_path:path}")
+    def serve_frontend(full_path: str):
+        if full_path.startswith("api"):
+            raise HTTPException(status_code=404, detail="API route not found")
+        requested_file = os.path.join(frontend_dist, full_path)
+        if os.path.exists(requested_file) and os.path.isfile(requested_file):
+            return FileResponse(requested_file)
+        return FileResponse(os.path.join(frontend_dist, "index.html"))
+

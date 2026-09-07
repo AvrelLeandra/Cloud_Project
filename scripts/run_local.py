@@ -5,8 +5,9 @@ import subprocess
 import threading
 
 def start_backend():
-    print("Starting FastAPI Local Server on http://127.0.0.1:8000...")
-    subprocess.run([sys.executable, "-m", "uvicorn", "api.main:app", "--host", "127.0.0.1", "--port", "8000"], cwd=os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+    port = int(os.getenv("PORT", 8000))
+    print(f"Starting FastAPI Server on http://0.0.0.0:{port}...")
+    subprocess.run([sys.executable, "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", str(port)], cwd=os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 def start_simulator():
     time.sleep(3) # Wait for backend startup

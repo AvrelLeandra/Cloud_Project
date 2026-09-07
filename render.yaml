@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: smart-fleet-telemetry
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "python scripts/run_local.py"
+    plan: free
+    region: singapore
+    envVars:
+      - key: PORT
+        value: 10000
